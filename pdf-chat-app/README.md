@@ -7,16 +7,21 @@
   - [SQLAlchemy](#sqlalchemy)
     - [Setting Up MetaData With Table Objects](#setting-up-metadata-with-table-objects)
     - [Declarative Approach](#declarative-approach)
+    - [Insert Data](#insert-data)
+      - [Declarative Insert Approach](#declarative-insert-approach)
+    - [Select Statement](#select-statement)
+    - [Update a specific row](#update-a-specific-row)
+    - [Delete a specific row](#delete-a-specific-row)
+  - [Bulk DML Syntax](#bulk-dml-syntax)
+    - [Bulk Insert](#bulk-insert)
 
 ## SQLAlchemy
 
 - [Engine (docs)](https://docs.sqlalchemy.org/en/20/tutorial/engine.html)
 
 ```python
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
-from sqlalchemy import text
-
 
 console= Console()
 
@@ -69,9 +74,8 @@ metadata_obj.create_all(engine)
 
 ```python
 from typing import Optional
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey, String
 from sqlalchemy.orm import Session, DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String
 
 from rich.console import Console
 
@@ -116,8 +120,99 @@ class Address(Base):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
 
 
-sandy: User = User(name="neidu", fullname="Chinedu Emmanuel")
-console.print(sandy)
+neidu: User = User(name="neidu", fullname="Chinedu Emmanuel")
+sandy: User = User(name="sandy", fullname="Sandy Kenbrigs")
+console.print(neidu)
 
+# Create tables
+Base.metadata.create_all(engine)
 
+```
+
+### Insert Data
+
+- [Table Approach](https://docs.sqlalchemy.org/en/20/tutorial/data_insert.html#tutorial-core-insert)
+
+#### Declarative Insert Approach
+
+```python
+session.add(neidu)
+session.add(sandy)
+session.commit()
+```
+
+### Select Statement
+
+```python
+# Select a specific row
+result = session.query(User).filter(User.name == "neidu").all()
+console.print(f"result1: {result}")
+
+# OR
+result = session.get(User, 1)
+console.print(f"result2: {result}")
+```
+
+### Update a specific row
+
+```python
+
+neidu_name = session.query(User).filter(User.name == "neidu").first()
+all_data = session.query(User).all()
+
+# Update
+try:
+    neidu_name.name = "michael"
+    session.commit()
+    console.print("User updated successfully!", style="green")
+
+except Exception as err:
+    console.print(f"Error updating user: {err}", style="red")
+    session.rollback()  # Rollback changes on error
+```
+
+### Delete a specific row
+
+```python
+patrick = User(name="pahto", fullname="Patrick Adebayo")
+session.add(patrick)
+
+patrick_name = session.query(User).filter(User.name == "pahto").first()
+
+# Delete
+try:
+    session.delete(patrick_name)
+    session.commit()
+    console.print("User deleted successfully!", style="green")
+
+except Exception as err:
+    console.print(f"Error deleting user: {err}", style="red")
+    session.rollback()  # Rollback changes on error
+```
+
+## Bulk DML Syntax
+
+- [Docs](https://docs.sqlalchemy.org/en/20/orm/queryguide/dml.html#orm-expression-update-delete)
+
+### Bulk Insert
+
+```python
+new_users: list[dict[str, Any]] = [
+    {"name": "spongebob", "fullname": "Spongebob Squarepants"},
+    {"name": "sandy", "fullname": "Sandy Cheeks"},
+    {"name": "patrick", "fullname": "Patrick Star"},
+    {"name": "squidward", "fullname": "Squidward Tentacles"},
+    {"name": "ehkrabs", "fullname": "Eugene H. Krabs"},
+]
+
+# Bulk Insert
+try:
+    users = session.scalars(insert(User).returning(User), new_users)
+    session.commit()
+    console.print(users.all())
+    console.print("User inserted successfully!", style="green")
+
+except Exception as err:
+    console.print(f"Error inserting user: {err}", style="red")
+    session.rollback()  # Rollback changes on error
 ```
