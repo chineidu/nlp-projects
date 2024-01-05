@@ -9,11 +9,17 @@
     - [Declarative Approach](#declarative-approach)
     - [Insert Data](#insert-data)
       - [Declarative Insert Approach](#declarative-insert-approach)
+      - [Insert 2 (Expression Construct)](#insert-2-expression-construct)
     - [Select Statement](#select-statement)
+    - [Select Statement (Expression Construct)](#select-statement-expression-construct)
     - [Update a specific row](#update-a-specific-row)
+    - [Update a specific Row (Expression Construct)](#update-a-specific-row-expression-construct)
     - [Delete a specific row](#delete-a-specific-row)
-  - [Bulk DML Syntax](#bulk-dml-syntax)
+    - [Delete a specific row (Expression Construct)](#delete-a-specific-row-expression-construct)
+  - [Bulk (Expression Construct)](#bulk-expression-construct)
     - [Bulk Insert](#bulk-insert)
+      - [Clossing A Session](#clossing-a-session)
+    - [Drop Table](#drop-table)
 
 ## SQLAlchemy
 
@@ -120,10 +126,6 @@ class Address(Base):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
 
 
-neidu: User = User(name="neidu", fullname="Chinedu Emmanuel")
-sandy: User = User(name="sandy", fullname="Sandy Kenbrigs")
-console.print(neidu)
-
 # Create tables
 Base.metadata.create_all(engine)
 
@@ -136,8 +138,23 @@ Base.metadata.create_all(engine)
 #### Declarative Insert Approach
 
 ```python
+neidu: User = User(name="neidu", fullname="Chinedu Emmanuel")
+sandy: User = User(name="sandy", fullname="Sandy Kenbrigs")
+console.print(neidu)
+
 session.add(neidu)
 session.add(sandy)
+session.commit()
+```
+
+#### Insert 2 (Expression Construct)
+
+```python
+from sqlalchemy import insert
+
+
+stmt = insert(User).values(name="jude", fullname="Jude Bags")
+session.execute(stmt)
 session.commit()
 ```
 
@@ -153,6 +170,21 @@ result = session.get(User, 1)
 console.print(f"result2: {result}")
 ```
 
+### Select Statement (Expression Construct)
+
+```python
+from sqlalchemy import select
+
+
+stmt = select(User).where(User.name == "jude")
+# Select all
+# result = session.execute(select(Users)).all()
+result = session.execute(stmt)
+
+for row in result:
+    console.print(row)
+```
+
 ### Update a specific row
 
 ```python
@@ -163,6 +195,29 @@ all_data = session.query(User).all()
 # Update
 try:
     neidu_name.name = "michael"
+    session.commit()
+    console.print("User updated successfully!", style="green")
+
+except Exception as err:
+    console.print(f"Error updating user: {err}", style="red")
+    session.rollback()  # Rollback changes on error
+```
+
+### Update a specific Row (Expression Construct)
+
+```python
+from sqlalchemy import update
+
+
+stmt = (
+          update(User)
+          .where(User.name == "neidu")
+          .values(fullname="Don Baba J")
+          )
+
+# Update
+try:
+    session.execute(stmt)
     session.commit()
     console.print("User updated successfully!", style="green")
 
@@ -190,7 +245,25 @@ except Exception as err:
     session.rollback()  # Rollback changes on error
 ```
 
-## Bulk DML Syntax
+### Delete a specific row (Expression Construct)
+
+```python
+from sqlalchemy import delete
+
+stmt = delete(User).where(User.name == "pahto")
+
+# Delete
+try:
+    session.execute(stmt)
+    session.commit()
+    console.print("User deleted successfully!", style="green")
+
+except Exception as err:
+    console.print(f"Error deleting user: {err}", style="red")
+    session.rollback()  # Rollback changes on error
+```
+
+## Bulk (Expression Construct)
 
 - [Docs](https://docs.sqlalchemy.org/en/20/orm/queryguide/dml.html#orm-expression-update-delete)
 
@@ -215,4 +288,27 @@ try:
 except Exception as err:
     console.print(f"Error inserting user: {err}", style="red")
     session.rollback()  # Rollback changes on error
+```
+
+#### Clossing A Session
+
+```python
+path: str = "sqlite:///./test.db"
+engine = create_engine(path, echo=True)
+session = Session(engine)
+
+...
+
+session.close()
+```
+
+### Drop Table
+
+```python
+from sqlalchemy.schema import DropTable
+
+
+address_table = Address.__table__
+session.execute(DropTable(address_table))
+session.commit()
 ```

@@ -46,9 +46,9 @@ class Address(Base):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
 
 
-neidu: User = User(name="neidu", fullname="Chinedu Emmanuel")
-sandy: User = User(name="sandy", fullname="Sandy Kenbrigs")
-console.print(neidu)
+# neidu: User = User(name="neidu", fullname="Chinedu Emmanuel")
+# sandy: User = User(name="sandy", fullname="Sandy Kenbrigs")
+# console.print(neidu)
 
 # Create tables
 Base.metadata.create_all(engine)

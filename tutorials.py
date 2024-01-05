@@ -1,5 +1,4 @@
-from typing import Any
-from sqlalchemy import insert
+from sqlalchemy import select, delete
 
 
 from rich.console import Console
@@ -8,21 +7,29 @@ from db import User, session
 
 console = Console()
 
-new_users: list[dict[str, Any]] = [
-    {"name": "spongebob", "fullname": "Spongebob Squarepants"},
-    {"name": "sandy", "fullname": "Sandy Cheeks"},
-    {"name": "patrick", "fullname": "Patrick Star"},
-    {"name": "squidward", "fullname": "Squidward Tentacles"},
-    {"name": "ehkrabs", "fullname": "Eugene H. Krabs"},
-]
+# Joins
+# stmt = insert(User).values(name="jude", fullname="Jude Bags")
+# session.execute(stmt)
 
-# Bulk Insert
-try:
-    users = session.scalars(insert(User).returning(User), new_users)
-    session.commit()
-    console.print(users.all())
-    console.print("User inserted successfully!", style="green")
 
-except Exception as err:
-    console.print(f"Error inserting user: {err}", style="red")
-    session.rollback()  # Rollback changes on error
+stmt = delete(User).where(User.name == "patrick")
+session.execute(stmt)
+session.commit()
+
+users = session.execute(select(User)).all()
+
+# for row in users:
+console.print(users)
+# console.print(users)
+
+
+# # Update
+# try:
+#     users = session.query(User).all()
+#     console.print(users)
+#     console.print("User inserted successfully!", style="green")
+#     session.commit()
+
+# except Exception as err:
+#     console.print(f"Error inserting user: {err}", style="red")
+#     session.rollback()  # Rollback changes on error
