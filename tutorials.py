@@ -1,35 +1,62 @@
-from sqlalchemy import select, delete
+from typing import TypeVar, Type
 
 
 from rich.console import Console
-from db import User, session
+from typeguard import typechecked
+
+# from db import User, session
 
 
 console = Console()
 
-# Joins
-# stmt = insert(User).values(name="jude", fullname="Jude Bags")
-# session.execute(stmt)
+P = TypeVar("P", bound="Product")
 
 
-stmt = delete(User).where(User.name == "patrick")
-session.execute(stmt)
-session.commit()
+class Product:
+    base_price: float = 100.0  # class attribute
 
-users = session.execute(select(User)).all()
+    @typechecked
+    def __init__(self, name: str, discount: float = 0) -> None:
+        self.name = name
+        if 0 <= discount <= 1:
+            self.discount = discount
+        else:
+            raise ValueError("discount must be between 0 and 1")
 
-# for row in users:
-console.print(users)
-# console.print(users)
+    @typechecked
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(name={self.name}, discount={self.discount})"
+
+    @typechecked
+    @classmethod
+    def from_string(cls: Type[P], product_str) -> P:
+        """Create the product from a string.
+        It uses the format: "name, discount"
+        """
+        name, discount = product_str.split(",")
+        return cls(name, float(discount))
+
+    @typechecked
+    @classmethod
+    def set_base_price(cls: Type[P], new_price: float) -> None:
+        """Change the base price for all the products."""
+        cls.base_price = new_price
+
+    @typechecked
+    def calculate_price(self) -> float:
+        """Calculate the final price using the discount."""
+        final_price: float = self.base_price * (1 - self.discount)
+        return final_price
 
 
-# # Update
-# try:
-#     users = session.query(User).all()
-#     console.print(users)
-#     console.print("User inserted successfully!", style="green")
-#     session.commit()
+Product.set_base_price(120.0)
+p1 = Product(name="Airbuds", discount=0.05)
+p2 = Product.from_string(product_str="Google Chromecast, 0.035")
+console.print(p1, style="green")  # Product(name=Airbuds, discount=0.05)
+console.print(p2, style="blue")  # Product(name=Google Chromecast, discount=0.035)
 
-# except Exception as err:
-#     console.print(f"Error inserting user: {err}", style="red")
-#     session.rollback()  # Rollback changes on error
+price_1 = p1.calculate_price()
+price_2 = p2.calculate_price()
+
+console.print(price_1, style="green")  # 114.0
+console.print(price_2, style="blue")  # 115.8

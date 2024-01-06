@@ -161,7 +161,7 @@ session.commit()
 ### Select Statement
 
 ```python
-# Select a specific row
+# Select a specific row(s)
 result = session.query(User).filter(User.name == "neidu").all()
 console.print(f"result1: {result}")
 
@@ -177,12 +177,11 @@ from sqlalchemy import select
 
 
 stmt = select(User).where(User.name == "jude")
-# Select all
-# result = session.execute(select(Users)).all()
-result = session.execute(stmt)
+# stmt = select(User).filter_by(name="jude", fullname="Jude Bags")
+result = session.execute(stmt).scalar_one()
 
-for row in result:
-    console.print(row)
+# Select all
+result = session.execute(select(Users)).scalars().all()
 ```
 
 ### Update a specific row
@@ -251,6 +250,7 @@ except Exception as err:
 from sqlalchemy import delete
 
 stmt = delete(User).where(User.name == "pahto")
+# stmt = delete(User).filter_by(name="pahto")
 
 # Delete
 try:
