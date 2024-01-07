@@ -16,10 +16,12 @@ from sqlalchemy.orm import (
 )
 from typeguard import typechecked
 
+from e_commerce_app.config.core import DB_PATH
+
 console = Console()
 
 # Sqlite dialect
-path: str = "sqlite:///./e-commerce.db"
+path: str = f"sqlite:///{DB_PATH}"
 engine = create_engine(path, echo=False, connect_args={"check_same_thread": False})
 session_local = Session(engine)
 
@@ -35,23 +37,17 @@ def format_date(date_string: str, date_format: str = "%d-%m-%Y") -> datetime:
     return formatted_date
 
 
+def get_db() -> Session:
+    """This is used to load the database instance."""
+    db: Session = session_local
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 class Base(DeclarativeBase):
     pass
-
-
-class Products(Base):
-    __tablename__: str = "products"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[str] = mapped_column(nullable=False)
-    price: Mapped[float] = mapped_column(nullable=False)
-
-    def __repr__(self) -> str:
-        return (
-            f"({self.__class__.__name__}(id={self.id!r}, name={self.name!r}, "
-            f"description={self.description!r}, price={self.price:,})"
-        )
 
 
 class Customers(Base):
@@ -74,6 +70,22 @@ class Customers(Base):
         )
 
 
+class Products(Base):
+    __tablename__: str = "products"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=False)
+    tags: Mapped[str]
+    price: Mapped[float] = mapped_column(nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"({self.__class__.__name__}(id={self.id!r}, name={self.name!r}, "
+            f"description={self.description!r}, price={self.price:,})"
+        )
+
+
 class Orders(Base):
     __tablename__: str = "orders"
 
@@ -91,3 +103,7 @@ class Orders(Base):
             f"order_date={self.order_date!r}, total_price={self.total_price!r}, "
             f"status={self.status!r})"
         )
+
+
+# Create tables
+Base.metadata.create_all(engine)

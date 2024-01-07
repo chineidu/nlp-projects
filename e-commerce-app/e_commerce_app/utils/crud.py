@@ -1,3 +1,5 @@
+"""Pydantic v2."""
+
 from typing import Any, Optional
 
 from rich.console import Console
@@ -6,7 +8,7 @@ from sqlalchemy.orm import Session
 from typeguard import typechecked
 
 from e_commerce_app import models
-from e_commerce_app.v1.schemas import model_schema
+from e_commerce_app.v1.schemas import db_schema
 
 console = Console()
 
@@ -21,7 +23,7 @@ def _exclude_sensitive_data(
 
 
 @typechecked
-def get_customer(db: Session, id: int) -> Any:
+def get_customer(db: Session, id: int) -> Optional[Any]:
     """Return the customer information."""
     stmt = select(models.Customers).filter_by(id=id)
     try:
@@ -32,7 +34,7 @@ def get_customer(db: Session, id: int) -> Any:
 
 
 @typechecked
-def get_customer_by_email(db: Session, email: str) -> Optional[Any]:
+def get_customer_by_email(db: Session, email: str) -> Any:
     """Return the the customer information."""
     stmt: Any = select(models.Customers).filter_by(email=email)
     try:
@@ -47,6 +49,55 @@ def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]
     """Return all the customer information."""
     stmt: Any = select(models.Customers).offset(skip).limit(limit)
     try:
+        result: list[Any] = db.execute(stmt).scalars().all()
+        return result
+    except Exception:
+        return None
+
+
+@typechecked
+def create_customer(db: Session, data: db_schema.CustomersSchema) -> Optional[dict[str, Any]]:
+    """This is used to add a new customer to the database."""
+    input_data: dict[str, Any] = data.model_dump()
+    stmt: Any = insert(models.Customers).values(**input_data)
+    try:
+        _ = db.execute(stmt)
+        user: dict[str, Any] = _exclude_sensitive_data(output=input_data)
+        db.commit()
+        return user
+
+    except Exception:
+        db.rollback()
+        return None
+
+
+@typechecked
+def get_products_by_name(db: Session, name: str) -> Optional[Any]:
+    """Return the customer information."""
+    stmt = select(models.Products).filter_by(name=name)
+    try:
+        result = db.execute(stmt).scalar_one()
+        return result
+    except Exception:
+        return None
+
+
+@typechecked
+def get_products_by_id(db: Session, id: Optional[int]) -> Optional[Any]:
+    """Return the customer information."""
+    stmt = select(models.Products).filter_by(id=id)
+    try:
+        result = db.execute(stmt).scalar_one()
+        return result
+    except Exception:
+        return None
+
+
+@typechecked
+def get_products(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]:
+    """Return all the customer information."""
+    stmt: Any = select(models.Products).offset(skip).limit(limit)
+    try:
         result: Any = db.execute(stmt).scalars().all()
         return result
     except Exception:
@@ -54,18 +105,14 @@ def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]
 
 
 @typechecked
-def create_customer(db: Session, data: model_schema.Customers) -> Optional[Any]:
-    """This is used to add a new customer to the database.
-
-    Note: I used Pydantic v2.
-
-    """
-    stmt: Any = insert(models.Customers).values(**data.model_dump())
+def create_product(db: Session, data: db_schema.ProductsSchema) -> Optional[Any]:
+    """This is used to add a new product to the database."""
+    input_data: dict[str, Any] = data.model_dump()
+    stmt: Any = insert(models.Products).values(**input_data)
     try:
         db.execute(stmt)
-        db_user: dict[str, Any] = _exclude_sensitive_data(output=stmt.compile().params)
         db.commit()
-        return db_user
+        return input_data
 
     except Exception:
         db.rollback()

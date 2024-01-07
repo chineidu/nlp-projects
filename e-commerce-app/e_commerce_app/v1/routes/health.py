@@ -8,7 +8,7 @@ from e_commerce_app.config import settings
 root_router = APIRouter()
 
 
-body: str = """
+body_template: str = """
             <html>
                 <body style='padding: 15px;'>
                     <h1>{} App</h1>
@@ -24,7 +24,7 @@ body: str = """
 async def index() -> Any:
     """This is the homepage."""
 
-    body: str = body.format(settings.PROJECT_NAME, settings.API_VERSION_STR)  # type: ignore
+    body: str = body_template.format(settings.PROJECT_NAME, settings.API_VERSION_STR)  # type: ignore
     return HTMLResponse(content=body)
 
 
