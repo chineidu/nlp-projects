@@ -1,45 +1,25 @@
-from fastapi import Depends, FastAPI, HTTPException
-from models import crud, models, schemas
-from models.models import session_local
-from sqlalchemy.orm import Session
+import uvicorn
+from fastapi import FastAPI
 
-# Create tables
-models.Base.metadata.create_all(models.engine)
+from e_commerce_app import create_app, settings  # type: ignore
 
-app = FastAPI(title="E-Commerce Website", version="0.1.0")
+app: FastAPI = create_app()
 
 
-def get_db() -> Session:
-    """L\This is used to load the database instance."""
-    db = session_local
-    try:
-        yield db
-    finally:
-        db.close()
+def main() -> None:
+    """This is the entrypoint."""
+
+    uvicorn.run(
+        "app:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.RELOAD,
+    )
 
 
-@app.post(path="/customers/")
-def create_customer(
-    data: schemas.CustomersInput, db: Session = Depends(get_db)
-) -> schemas.Customers:
-    _data = data.input[0]
-    db_user = crud.get_customer_by_email(db=db, email=_data.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_customer(db=db, data=_data)
+## Uncomment to run with: python app.py
+# if __name__ == "__main__":
+# main()
 
-
-@app.get(path="/customer/{id}")
-def read_user(id: int, db: Session = Depends(get_db)) -> schemas.CustomersOutput:
-    db_user = crud.get_customer(db=db, id=id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
-
-
-@app.get(path="/customers/")
-def read_users(db: Session = Depends(get_db)) -> list[schemas.CustomersOutput]:
-    db_user = crud.get_customers(db=db)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+# Run with CLI (Recommended)
+# uvicorn api.app:app --port 8008 --host "0.0.0.0"

@@ -11,6 +11,9 @@ fastapi = "^0.108.0"
 sqlalchemy = "^2.0.25"
 click = "^8.1.7"
 pydantic = {extras = ["email"], version = "^2.5.3"}
+pyyaml = "^6.0.1"
+loguru = "^0.7.2"
+pydantic-settings = "^2.1.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"

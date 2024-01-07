@@ -32,12 +32,12 @@ class Customers(BaseModel):
 class CustomersInput(BaseModel):
     """Pydantic V2"""
 
-    input: list[Customers]
+    data: list[Customers]
 
     model_config = {
         "json_schema_extra": {
             "example": {
-                "input": [
+                "data": [
                     {
                         "name": "Neidu",
                         "email": "email@example.com",

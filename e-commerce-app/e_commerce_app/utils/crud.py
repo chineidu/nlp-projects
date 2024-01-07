@@ -1,11 +1,12 @@
 from typing import Any, Optional
 
-import models
-import schemas
 from rich.console import Console
 from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 from typeguard import typechecked
+
+from e_commerce_app import models
+from e_commerce_app.v1.schemas import model_schema
 
 console = Console()
 
@@ -53,7 +54,7 @@ def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]
 
 
 @typechecked
-def create_customer(db: Session, data: schemas.Customers) -> Optional[Any]:
+def create_customer(db: Session, data: model_schema.Customers) -> Optional[Any]:
     """This is used to add a new customer to the database.
 
     Note: I used Pydantic v2.
