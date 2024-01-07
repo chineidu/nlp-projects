@@ -1,11 +1,11 @@
-from typing import Any
+from typing import Any, Optional
 
+import models
+import schemas
 from rich.console import Console
 from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 from typeguard import typechecked
-
-from . import models, schemas
 
 console = Console()
 
@@ -31,7 +31,7 @@ def get_customer(db: Session, id: int) -> Any:
 
 
 @typechecked
-def get_customer_by_email(db: Session, email: str) -> Any:
+def get_customer_by_email(db: Session, email: str) -> Optional[Any]:
     """Return the the customer information."""
     stmt: Any = select(models.Customers).filter_by(email=email)
     try:
@@ -42,7 +42,7 @@ def get_customer_by_email(db: Session, email: str) -> Any:
 
 
 @typechecked
-def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Any:
+def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]:
     """Return all the customer information."""
     stmt: Any = select(models.Customers).offset(skip).limit(limit)
     try:
@@ -53,11 +53,12 @@ def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Any:
 
 
 @typechecked
-def create_customer(
-    db: Session,
-    data: schemas.Customers,
-) -> Any:
-    """This is used to add a new customer to the database."""
+def create_customer(db: Session, data: schemas.Customers) -> Optional[Any]:
+    """This is used to add a new customer to the database.
+
+    Note: I used Pydantic v2.
+
+    """
     stmt: Any = insert(models.Customers).values(**data.model_dump())
     try:
         db.execute(stmt)

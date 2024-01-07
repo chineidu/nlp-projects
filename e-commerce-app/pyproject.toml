@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pdf-chat-app"
+name = "e-commerce-app"
 version = "0.1.0"
 description = ""
 authors = ["Chinedu Ezeofor <neiduezeofor@gmail.com>"]
@@ -8,22 +8,13 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.108.0"
-langchain = "0.0.349"
 sqlalchemy = "^2.0.25"
-python-dotenv = "^1.0.0"
 click = "^8.1.7"
-openai = "^1.6.1"
-tiktoken = "^0.5.2"
-langfuse = "^2.4.2"
-celery = "^5.3.6"
-pre-commit = "^3.6.0"
 pydantic = {extras = ["email"], version = "^2.5.3"}
-
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"
 ruff = "^0.1.11"
-
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.4"

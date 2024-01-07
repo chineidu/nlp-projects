@@ -1,8 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
-
 from models import crud, models, schemas
 from models.models import session_local
+from sqlalchemy.orm import Session
 
 # Create tables
 models.Base.metadata.create_all(models.engine)
@@ -19,7 +18,7 @@ def get_db() -> Session:
         db.close()
 
 
-@app.post(path="/customers/", response_model=schemas.CustomersOutput)
+@app.post(path="/customers/")
 def create_customer(
     data: schemas.CustomersInput, db: Session = Depends(get_db)
 ) -> schemas.Customers:
@@ -30,7 +29,7 @@ def create_customer(
     return crud.create_customer(db=db, data=_data)
 
 
-@app.get(path="/customer/{id}", response_model=schemas.CustomersOutput)
+@app.get(path="/customer/{id}")
 def read_user(id: int, db: Session = Depends(get_db)) -> schemas.CustomersOutput:
     db_user = crud.get_customer(db=db, id=id)
     if db_user is None:
@@ -38,7 +37,7 @@ def read_user(id: int, db: Session = Depends(get_db)) -> schemas.CustomersOutput
     return db_user
 
 
-@app.get(path="/customers/", response_model=list[schemas.CustomersOutput])
+@app.get(path="/customers/")
 def read_users(db: Session = Depends(get_db)) -> list[schemas.CustomersOutput]:
     db_user = crud.get_customers(db=db)
     if db_user is None:

@@ -91,34 +91,3 @@ class Orders(Base):
             f"order_date={self.order_date!r}, total_price={self.total_price!r}, "
             f"status={self.status!r})"
         )
-
-
-# # Create tables
-# Base.metadata.create_all(engine)
-
-# stmt = insert(Products).values(
-#     name="Sweetie", description="My baby girl", price=500_000
-# )
-# session_local.execute(stmt)
-
-# stmt = insert(Customers).values(
-#     name="Sweetie",
-#     email="my_b@email.com",
-#     password="abc043defgh34",
-#     shipping_address="ikeja, Lagos",
-# )
-# a = session_local.execute(stmt)
-# print(stmt)
-# session_local.commit()
-
-# stmt = insert(Orders).values(
-#     customer_id=1,
-#     order_date=format_date("05-01-2024"),
-#     total_price=25.50,
-#     status="shipped",
-# )
-# session_local.execute(stmt)
-# session_local.commit()
-
-# result = session_local.execute(select(Orders)).scalars().all()
-# console.print(result)
