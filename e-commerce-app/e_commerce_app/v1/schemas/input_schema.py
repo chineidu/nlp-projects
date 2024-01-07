@@ -65,7 +65,7 @@ class ProductsInputSchema(BaseModel):
                     {
                         "name": "Google Chromecast",
                         "description": (
-                            "It enables Android TV on your " "LED TV, smart TV, monitor, etc"
+                            "It enables Android TV on your LED TV, smart TV, monitor, etc"
                         ),
                         "tags": "electronics, gadgets, android",
                         "price": 68000.00,
