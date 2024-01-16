@@ -8,7 +8,7 @@ from e_commerce_app.v1.schemas import input_schema, output_schema
 customer_router = APIRouter()
 
 
-@customer_router.post(path="/customers/")
+@customer_router.post(path="/customers/", tags=["customers"])
 def create_customer(
     data: input_schema.CustomersInputSchema, db: Session = Depends(get_db)
 ) -> output_schema.CustomersOutputSchema:
@@ -21,7 +21,7 @@ def create_customer(
     return crud.create_customer(db=db, data=_data)
 
 
-@customer_router.get(path="/customer/{id}")
+@customer_router.get(path="/customer/{id}", tags=["customers"])
 def get_customer(id: int, db: Session = Depends(get_db)) -> output_schema.CustomersOutputSchema:
     """This is used to retrieve a registered user."""
     user = crud.get_customer(db=db, id=id)
@@ -30,7 +30,7 @@ def get_customer(id: int, db: Session = Depends(get_db)) -> output_schema.Custom
     return user
 
 
-@customer_router.get(path="/customers/")
+@customer_router.get(path="/customers/", tags=["customers"])
 def get_customers(
     db: Session = Depends(get_db),
 ) -> list[output_schema.CustomersOutputSchema]:

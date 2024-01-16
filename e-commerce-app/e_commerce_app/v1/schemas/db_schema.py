@@ -7,6 +7,9 @@ from pydantic import BaseModel, ConfigDict, EmailStr, constr
 
 Status = Literal["pending", "processing", "shipped", "delivered"]
 
+# class BaseSchema(BaseModel):
+# model_config = ConfigDict(str_to_lower=True, str_strip_whitespace=True)
+
 
 class CustomersSchema(BaseModel):
     model_config = ConfigDict(str_to_lower=True, str_strip_whitespace=True)

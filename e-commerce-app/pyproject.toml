@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "e-commerce-app"
-version = "0.1.0"
+version = "1.0.2"
 description = ""
 authors = ["Chinedu Ezeofor <neiduezeofor@gmail.com>"]
 readme = "README.md"
@@ -14,6 +14,9 @@ pydantic = {extras = ["email"], version = "^2.5.3"}
 pyyaml = "^6.0.1"
 loguru = "^0.7.2"
 pydantic-settings = "^2.1.0"
+typeguard = "^4.1.5"
+uvicorn = "^0.26.0"
+rich = "^13.7.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"

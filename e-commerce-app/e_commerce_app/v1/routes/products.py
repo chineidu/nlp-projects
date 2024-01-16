@@ -8,7 +8,7 @@ from e_commerce_app.v1.schemas import input_schema, output_schema
 product_router = APIRouter()
 
 
-@product_router.post(path="/products/")
+@product_router.post(path="/products/", tags=["products"])
 def create_product(
     data: input_schema.ProductsInputSchema, db: Session = Depends(get_db)
 ) -> output_schema.ProductsOutputSchema:
@@ -21,7 +21,7 @@ def create_product(
     return crud.create_product(db=db, data=_data)
 
 
-@product_router.get(path="/product/{name}")
+@product_router.get(path="/product/{name}", tags=["products"])
 def get_product(name: str, db: Session = Depends(get_db)) -> output_schema.ProductsOutputSchema:
     """This is used to retrieve an available product."""
     name = name.strip().lower()
@@ -31,7 +31,7 @@ def get_product(name: str, db: Session = Depends(get_db)) -> output_schema.Produ
     return product
 
 
-@product_router.get(path="/products/")
+@product_router.get(path="/products/", tags=["products"])
 def get_products(
     db: Session = Depends(get_db),
 ) -> list[output_schema.ProductsOutputSchema]:

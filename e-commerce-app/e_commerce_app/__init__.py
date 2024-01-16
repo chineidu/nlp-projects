@@ -13,7 +13,6 @@ def create_app() -> FastAPI:
     from e_commerce_app.v1.routes.health import root_router
     from e_commerce_app.v1.routes.products import product_router
 
-    # models.Base.metadata.create_all(models.engine)
     app: FastAPI = FastAPI(
         title=settings.PROJECT_NAME,
         openapi_url=f"/{settings.API_VERSION_STR}/openapi.json",

@@ -22,4 +22,4 @@ def main() -> None:
 # main()
 
 # Run with CLI (Recommended)
-# uvicorn api.app:app --port 8008 --host "0.0.0.0"
+# uvicorn app:app --port 8008 --host "0.0.0.0"
