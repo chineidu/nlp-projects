@@ -66,7 +66,7 @@ class Customers(Base):
     def __repr__(self) -> str:
         return (
             f"({self.__class__.__name__}(id={self.id!r}, name={self.name!r}, email={self.email!r}, "
-            f"password={self.password!r}, shipping_address={self.shipping_address!r})"
+            f"shipping_address={self.shipping_address!r})"
         )
 
 
