@@ -31,7 +31,6 @@ poetry shell
 ### Run App
 
 ```sh
-# Run with CLI (Recommended)
 uvicorn app:app --port 8008 --host "0.0.0.0"
 ```
 
