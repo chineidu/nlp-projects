@@ -31,7 +31,7 @@ poetry shell
 ### Run App
 
 ```sh
-uvicorn app:app --port 8008 --host "0.0.0.0"
+uvicorn app:app --port 8000 --host "0.0.0.0"
 ```
 
 ## Project Structure
