@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -6,11 +8,12 @@ from e_commerce_app.utils import crud
 from e_commerce_app.v1.schemas import input_schema, output_schema
 
 product_router = APIRouter()
+db_dependency = Annotated[Session, Depends(get_db)]
 
 
 @product_router.post(path="/products/", tags=["products"])
 def create_product(
-    data: input_schema.ProductsInputSchema, db: Session = Depends(get_db)
+    data: input_schema.ProductsInputSchema, db: Session = db_dependency
 ) -> output_schema.ProductsOutputSchema:
     """This is used to create a new user."""
     _data = data.data[0]
@@ -22,7 +25,7 @@ def create_product(
 
 
 @product_router.get(path="/product/{name}", tags=["products"])
-def get_product(name: str, db: Session = Depends(get_db)) -> output_schema.ProductsOutputSchema:
+def get_product(name: str, db: Session = db_dependency) -> output_schema.ProductsOutputSchema:
     """This is used to retrieve an available product."""
     name = name.strip().lower()
     product = crud.get_products_by_name(db=db, name=name)
@@ -33,7 +36,7 @@ def get_product(name: str, db: Session = Depends(get_db)) -> output_schema.Produ
 
 @product_router.get(path="/products/", tags=["products"])
 def get_products(
-    db: Session = Depends(get_db),
+    db: Session = db_dependency,
 ) -> list[output_schema.ProductsOutputSchema]:
     """This is used to retrieve all available products."""
     db_product = crud.get_products(db=db)
