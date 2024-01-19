@@ -25,10 +25,10 @@ def create_customer(
 @customer_router.get(path="/customer/{id}", tags=["customers"])
 def get_customer(id: int, db: Session = Depends(get_db)) -> output_schema.CustomersOutputSchema:
     """This is used to retrieve a registered user."""
-    user = crud.get_customer(db=db, id=id)
-    if user is None:
+    result = crud.get_customer(db=db, id=id)
+    if result is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return result
 
 
 @customer_router.get(path="/customers/", tags=["customers"])
@@ -36,7 +36,7 @@ def get_customers(
     db: Session = Depends(get_db),
 ) -> list[output_schema.CustomersOutputSchema]:
     """This is used to retrieve all registered users."""
-    user = crud.get_customers(db=db)
-    if user is None:
+    result = crud.get_customers(db=db)
+    if result is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return result

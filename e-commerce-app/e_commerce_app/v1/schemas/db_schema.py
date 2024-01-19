@@ -1,6 +1,6 @@
 """It uses Pydantic v2."""
 
-from datetime import datetime
+from datetime import date
 from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, EmailStr, constr
@@ -23,7 +23,7 @@ class CustomersSchema(BaseSchema):
 
 class OrdersSchema(BaseSchema):
     customer_id: int
-    order_date: datetime
+    order_date: date
     total_price: float
     status: Status
 

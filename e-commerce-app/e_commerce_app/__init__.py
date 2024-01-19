@@ -11,7 +11,8 @@ def create_app() -> FastAPI:
     # ==== Included to avoid calling this multiple times. ====
     from e_commerce_app.v1.routes.customers import customer_router
     from e_commerce_app.v1.routes.health import root_router
-    from e_commerce_app.v1.routes.products import product_router
+    from e_commerce_app.v1.routes.orders import orders_router
+    from e_commerce_app.v1.routes.products import products_router
 
     app: FastAPI = FastAPI(
         title=settings.PROJECT_NAME,
@@ -33,6 +34,7 @@ def create_app() -> FastAPI:
     # Add routers
     app.include_router(root_router)
     app.include_router(customer_router, prefix=f"/{settings.API_VERSION_STR}")
-    app.include_router(product_router, prefix=f"/{settings.API_VERSION_STR}")
+    app.include_router(products_router, prefix=f"/{settings.API_VERSION_STR}")
+    app.include_router(orders_router, prefix=f"/{settings.API_VERSION_STR}")
 
     return app

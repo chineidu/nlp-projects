@@ -43,8 +43,8 @@ class OrdersInputSchema(BaseModel):
                 "data": [
                     {
                         "customer_id": "1",
-                        "order_date": "01-01-2024",  # %d-%m-%Y
-                        "price": 68000.00,
+                        "order_date": "2024-01-01",  # %Y-%m-%d
+                        "total_price": 68000.00,
                         "status": "processing",
                     }
                 ]

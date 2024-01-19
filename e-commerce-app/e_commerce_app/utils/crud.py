@@ -34,7 +34,7 @@ def get_customer(db: Session, id: int) -> Optional[Any]:
 
 
 @typechecked
-def get_customer_by_email(db: Session, email: str) -> Any:
+def get_customer_by_email(db: Session, email: str) -> Optional[Any]:
     """Return the the customer information."""
     stmt: Any = select(models.Customers).filter_by(email=email)
     try:
@@ -45,7 +45,7 @@ def get_customer_by_email(db: Session, email: str) -> Any:
 
 
 @typechecked
-def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]:
+def get_customers(db: Session, skip: int = 0, limit: int = 100) -> Optional[list[dict[str, Any]]]:
     """Return all the customer information."""
     stmt: Any = select(models.Customers).offset(skip).limit(limit)
     try:
@@ -66,7 +66,7 @@ def create_customer(db: Session, data: db_schema.CustomersSchema) -> Optional[di
         db.commit()
         return user
 
-    except Exception as err:
+    except Exception:
         db.rollback()
         return None
 
@@ -94,7 +94,7 @@ def get_products_by_id(db: Session, id: Optional[int]) -> Optional[dict[str, Any
 
 
 @typechecked
-def get_products(db: Session, skip: int = 0, limit: int = 100) -> Optional[dict[str, Any]]:
+def get_products(db: Session, skip: int = 0, limit: int = 100) -> Optional[list[dict[str, Any]]]:
     """Return all the product information."""
     stmt: Any = select(models.Products).offset(skip).limit(limit)
     try:
@@ -120,7 +120,7 @@ def create_product(db: Session, data: db_schema.ProductsSchema) -> Optional[dict
 
 
 @typechecked
-def get_orders(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]:
+def get_orders(db: Session, skip: int = 0, limit: int = 100) -> Optional[list[dict[str, Any]]]:
     """Return all the orders information."""
     stmt: Any = select(models.Orders).offset(skip).limit(limit)
     try:
@@ -131,18 +131,20 @@ def get_orders(db: Session, skip: int = 0, limit: int = 100) -> Optional[Any]:
 
 
 @typechecked
-def get_orders_by_id(db: Session, id: Optional[int]) -> Optional[dict[str, Any]]:
+def get_orders_by_id_n_status(
+    db: Session, customer_id: Optional[int], status: Optional[db_schema.Status]
+) -> Optional[list[dict[str, Any]]]:
     """Return the order information."""
-    stmt = select(models.Products).filter_by(id=id)
+    stmt = select(models.Orders).filter_by(customer_id=customer_id, status=status)
     try:
-        result = db.execute(stmt).scalar_one()
+        result = db.execute(stmt).scalars().all()
         return result
     except Exception:
         return None
 
 
 @typechecked
-def create_order(db: Session, data: db_schema.ProductsSchema) -> Optional[Any]:
+def create_order(db: Session, data: db_schema.OrdersSchema) -> Optional[dict[str, Any]]:
     """This is used to add a new order to the database."""
     input_data: dict[str, Any] = data.model_dump()
     stmt: Any = insert(models.Orders).values(**input_data)
