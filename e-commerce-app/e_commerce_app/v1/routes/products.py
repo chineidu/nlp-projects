@@ -13,7 +13,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @product_router.post(path="/products/", tags=["products"])
 def create_product(
-    data: input_schema.ProductsInputSchema, db: Session = db_dependency
+    data: input_schema.ProductsInputSchema, db: db_dependency
 ) -> output_schema.ProductsOutputSchema:
     """This is used to create a new user."""
     _data = data.data[0]
@@ -25,7 +25,7 @@ def create_product(
 
 
 @product_router.get(path="/product/{name}", tags=["products"])
-def get_product(name: str, db: Session = db_dependency) -> output_schema.ProductsOutputSchema:
+def get_product(name: str, db: db_dependency) -> output_schema.ProductsOutputSchema:
     """This is used to retrieve an available product."""
     name = name.strip().lower()
     product = crud.get_products_by_name(db=db, name=name)
@@ -36,7 +36,7 @@ def get_product(name: str, db: Session = db_dependency) -> output_schema.Product
 
 @product_router.get(path="/products/", tags=["products"])
 def get_products(
-    db: Session = db_dependency,
+    db: db_dependency,
 ) -> list[output_schema.ProductsOutputSchema]:
     """This is used to retrieve all available products."""
     db_product = crud.get_products(db=db)

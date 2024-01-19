@@ -10,6 +10,7 @@
   - [Project Structure](#project-structure)
     - [Directories And Files](#directories-and-files)
     - [Database Schema](#database-schema)
+  - [Note](#note)
 
 ## Setup
 
@@ -98,4 +99,31 @@ Products:
     description: str
     tags: Optional[str] = None
     price: float
+```
+
+## Note
+
+- Any syntax works fine.
+  - `db_dependency = Annotated[Session, Depends(get_db)]`
+    - i.e `db: db_dependency`
+  - `db: Session = Depends(get_db)`
+
+```python
+from typing import Annotated
+from fastapi import Depends
+
+
+db_dependency = Annotated[Session, Depends(get_db)]
+
+
+@product_router.post(path="/products/", tags=["products"])
+def create_product(db: db_dependency) -> output_schema.ProductsOutputSchema:
+    """This is used to create a new user."""
+    pass
+
+# OR
+@product_router.post(path="/products/", tags=["products"])
+def create_product(db: Session = Depends(get_db)) -> output_schema.ProductsOutputSchema:
+    """This is used to create a new user."""
+    pass
 ```

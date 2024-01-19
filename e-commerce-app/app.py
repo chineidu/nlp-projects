@@ -17,9 +17,5 @@ def main() -> None:
     )
 
 
-## Uncomment to run with: python app.py
-# if __name__ == "__main__":
-# main()
-
 # Run with CLI (Recommended)
 # uvicorn app:app --port 8008 --host "0.0.0.0"
