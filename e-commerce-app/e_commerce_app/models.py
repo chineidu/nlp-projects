@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Any, Literal
 
-from rich.console import Console
 from sqlalchemy import (
     DateTime,
     ForeignKey,
@@ -16,14 +15,26 @@ from sqlalchemy.orm import (
 )
 from typeguard import typechecked
 
-from e_commerce_app.config.core import DB_PATH
+from e_commerce_app.utils.credentials import USER_CREDENTIALS
 
-console = Console()
+(DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT) = (
+    USER_CREDENTIALS.DB_USER,
+    USER_CREDENTIALS.DB_PASSWORD,
+    USER_CREDENTIALS.DB_NAME,
+    USER_CREDENTIALS.DB_HOST,
+    USER_CREDENTIALS.DB_PORT,
+)
+
 
 # Sqlite dialect
-path: str = f"sqlite:///{DB_PATH}"
-engine = create_engine(path, echo=False, connect_args={"check_same_thread": False})
-session_local = Session(engine)
+# path: str = f"sqlite:///{DB_PATH}"
+# engine = create_engine(path, echo=False, connect_args={"check_same_thread": False})
+
+# Postgres
+SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)
+
+session_local = Session(bind=engine)
 
 
 Status = Literal["pending", "processing", "shipped", "delivered"]

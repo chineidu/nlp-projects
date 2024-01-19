@@ -18,7 +18,8 @@ def create_customer(
 
     if user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_customer(db=db, data=_data)
+    result = crud.create_customer(db=db, data=_data)
+    return result
 
 
 @customer_router.get(path="/customer/{id}", tags=["customers"])

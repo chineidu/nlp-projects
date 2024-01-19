@@ -17,11 +17,8 @@ def create_product(
 ) -> output_schema.ProductsOutputSchema:
     """This is used to create a new user."""
     _data = data.data[0]
-    product = crud.get_products_by_id(db=db, id=_data.id)
-
-    if product:
-        raise HTTPException(status_code=400, detail=f"Product with id={_data.id} already exists")
-    return crud.create_product(db=db, data=_data)
+    result = crud.create_product(db=db, data=_data)
+    return result
 
 
 @product_router.get(path="/product/{name}", tags=["products"])

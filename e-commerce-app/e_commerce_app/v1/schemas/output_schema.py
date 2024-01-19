@@ -9,6 +9,7 @@ from e_commerce_app.v1.schemas.db_schema import Status
 
 
 class CustomersOutputSchema(BaseModel):
+    id: Optional[int] = None
     name: str
     email: EmailStr
     billing_address: Optional[str] = None
@@ -17,6 +18,7 @@ class CustomersOutputSchema(BaseModel):
 
 
 class OrdersOutputSchema(BaseModel):
+    id: Optional[int] = None
     customer_id: int
     order_date: datetime
     total_price: float
@@ -24,6 +26,7 @@ class OrdersOutputSchema(BaseModel):
 
 
 class ProductsOutputSchema(BaseModel):
+    id: Optional[int] = None
     name: str
     description: str
     tags: Optional[str] = None

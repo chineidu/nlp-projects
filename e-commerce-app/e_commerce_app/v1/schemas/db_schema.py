@@ -11,8 +11,6 @@ Status = Literal["pending", "processing", "shipped", "delivered"]
 class BaseSchema(BaseModel):
     model_config = ConfigDict(str_to_lower=True, str_strip_whitespace=True)
 
-    id: Optional[int] = None
-
 
 class CustomersSchema(BaseSchema):
     name: str
