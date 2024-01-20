@@ -5,4 +5,4 @@ PROJECT_NAME: E-Commerce
 
 # DATABASE/ENV CONFIG
 DB_PATH: e-commerce.db
-ENV_FILE_PATH: ./env/.env
+ENV_FILE_PATH: ./env/example.env

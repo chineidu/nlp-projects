@@ -44,8 +44,7 @@ def format_date(date_string: str, date_format: str = "%d-%m-%Y") -> datetime:
     return formatted_date
 
 
-@typechecked
-def get_db() -> Session:
+def get_db() -> None:  # type: ignore[misc]
     """This is used to load the database instance."""
     db: Session = session_local
     try:

@@ -6,7 +6,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: 'e_comm_app:v1'
+    image: 'e_comm_app:v2'
     container_name: app
     ports:
       - 8000:8000
@@ -22,11 +22,13 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5434:5432
+      - 5432:5432
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
+    env_file:
+      - env/example.env
 
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
