@@ -9,12 +9,13 @@ class APIConfigSchema(BaseModel):
     PROJECT_NAME: str
 
 
-class DBConfig(BaseModel):
+class PathConfig(BaseModel):
     DB_PATH: str
+    ENV_FILE_PATH: str
 
 
 class ConfigVars(BaseModel):
     """Main configuration object."""
 
     api_config_schema: APIConfigSchema
-    db_config: DBConfig
+    path_config: PathConfig

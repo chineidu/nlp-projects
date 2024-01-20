@@ -6,6 +6,7 @@
   - [Table of Content](#table-of-content)
   - [Setup](#setup)
     - [Install Dependencies](#install-dependencies)
+    - [Setup Environment Variables](#setup-environment-variables)
     - [Run App](#run-app)
   - [Project Structure](#project-structure)
     - [Directories And Files](#directories-and-files)
@@ -27,6 +28,13 @@ poetry install
 
 # Activate Shell
 poetry shell
+```
+
+### Setup Environment Variables
+
+```sh
+# Create .env file
+cp env/example.env env/.env
 ```
 
 ### Run App

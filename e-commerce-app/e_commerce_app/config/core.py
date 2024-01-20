@@ -7,7 +7,7 @@ from typeguard import typechecked
 # Custom Imports
 import e_commerce_app
 from e_commerce_app.logger_config import logger
-from e_commerce_app.v1.schemas.api_schema import APIConfigSchema, ConfigVars, DBConfig
+from e_commerce_app.v1.schemas.api_schema import APIConfigSchema, ConfigVars, PathConfig
 
 SRC_ROOT: Path = Path(e_commerce_app.__file__).absolute().parent  # src/
 ROOT: Path = SRC_ROOT.parent  # proj/src
@@ -39,10 +39,11 @@ def validate_config_file(*, filename: Optional[Path] = None) -> ConfigVars:
     # Validate config
     config_file = ConfigVars(
         api_config_schema=APIConfigSchema(**config_dict),  # type: ignore
-        db_config=DBConfig(**config_dict),  # type: ignore
+        path_config=PathConfig(**config_dict),  # type: ignore
     )
     return config_file
 
 
 config: ConfigVars = validate_config_file(filename=None)
-DB_PATH: Path = ROOT / f"{config.db_config.DB_PATH}"
+DB_PATH: Path = ROOT / config.path_config.DB_PATH
+ENV_PATH: Path = ROOT / config.path_config.ENV_FILE_PATH

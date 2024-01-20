@@ -5,7 +5,9 @@ from dotenv import find_dotenv, load_dotenv
 from pydantic import BaseModel
 from typeguard import typechecked
 
-_ = load_dotenv(find_dotenv(filename=".env"))
+from e_commerce_app.config.core import ENV_PATH
+
+_ = load_dotenv(find_dotenv(filename=ENV_PATH))
 
 
 @typechecked
