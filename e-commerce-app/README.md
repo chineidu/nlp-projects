@@ -7,6 +7,7 @@
   - [Setup](#setup)
     - [Install Dependencies](#install-dependencies)
     - [Setup Environment Variables](#setup-environment-variables)
+    - [Create Database](#create-database)
     - [Run App](#run-app)
   - [Project Structure](#project-structure)
     - [Directories And Files](#directories-and-files)
@@ -37,10 +38,19 @@ poetry shell
 cp env/example.env env/.env
 ```
 
+### Create Database
+
+```sh
+make create_db
+```
+
 ### Run App
 
 ```sh
 uvicorn app:app --port 8000 --host "0.0.0.0"
+
+## Check listening ports
+# sudo lsof -i -P | grep LISTEN
 ```
 
 ## Project Structure

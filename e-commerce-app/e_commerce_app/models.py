@@ -4,6 +4,7 @@ from typing import Any, Literal
 from sqlalchemy import (
     DateTime,
     ForeignKey,
+    String,
     create_engine,
 )
 from sqlalchemy.orm import (
@@ -15,28 +16,23 @@ from sqlalchemy.orm import (
 )
 from typeguard import typechecked
 
-from e_commerce_app.utils.credentials import USER_CREDENTIALS
-
-(DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT) = (
-    USER_CREDENTIALS.DB_USER,
-    USER_CREDENTIALS.DB_PASSWORD,
-    USER_CREDENTIALS.DB_NAME,
-    USER_CREDENTIALS.DB_HOST,
-    USER_CREDENTIALS.DB_PORT,
+from e_commerce_app.utils.credentials import (
+    DB_HOST,
+    DB_NAME,
+    DB_PASSWORD,
+    DB_PORT,
+    DB_USER,
 )
-
 
 # Sqlite dialect
 # path: str = f"sqlite:///{DB_PATH}"
 # engine = create_engine(path, echo=False, connect_args={"check_same_thread": False})
 
-# Postgres
-SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# Postgres dialect
+SQLALCHEMY_DATABASE_URL: str = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)
 
 session_local = Session(bind=engine)
-
-
 Status = Literal["pending", "processing", "shipped", "delivered"]
 
 
@@ -48,6 +44,7 @@ def format_date(date_string: str, date_format: str = "%d-%m-%Y") -> datetime:
     return formatted_date
 
 
+@typechecked
 def get_db() -> Session:
     """This is used to load the database instance."""
     db: Session = session_local
@@ -65,12 +62,12 @@ class Customers(Base):
     __tablename__: str = "customers"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
-    email: Mapped[str] = mapped_column(nullable=False)
-    password: Mapped[str] = mapped_column(nullable=False)
-    billing_address: Mapped[str] = mapped_column(nullable=True)
-    shipping_address: Mapped[str] = mapped_column(nullable=False)
-    phone_number: Mapped[str] = mapped_column(nullable=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=False)
+    password: Mapped[str] = mapped_column(String(50), nullable=False)
+    billing_address: Mapped[str] = mapped_column(String(255), nullable=True)
+    shipping_address: Mapped[str] = mapped_column(String(255), nullable=False)
+    phone_number: Mapped[str] = mapped_column(String(255), nullable=True)
 
     order: Mapped["Orders"] = relationship(back_populates="customers")
 
@@ -85,9 +82,9 @@ class Products(Base):
     __tablename__: str = "products"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[str] = mapped_column(nullable=False)
-    tags: Mapped[str]
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(String(255), nullable=False)
+    tags: Mapped[str] = mapped_column(String(255), nullable=False)
     price: Mapped[float] = mapped_column(nullable=False)
 
     def __repr__(self) -> str:
@@ -104,7 +101,7 @@ class Orders(Base):
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id"), nullable=False)
     order_date: Mapped[Any] = mapped_column(DateTime, default=datetime.utcnow)
     total_price: Mapped[float] = mapped_column(nullable=False)
-    status: Mapped[Status] = mapped_column(nullable=False)
+    status: Mapped[Status] = mapped_column(String(20), nullable=False)
 
     customers: Mapped["Customers"] = relationship(back_populates="order")
 
