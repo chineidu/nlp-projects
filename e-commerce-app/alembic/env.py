@@ -1,13 +1,9 @@
 from logging.config import fileConfig
 
-from dotenv import find_dotenv, load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context  # type: ignore
 from e_commerce_app import models
-from e_commerce_app.config.core import ENV_PATH
-
-_ = load_dotenv(find_dotenv(filename=ENV_PATH))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
