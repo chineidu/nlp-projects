@@ -1,9 +1,13 @@
-"""It uses Pydantic v2."""
+"""This module contains the database schema of the API.
+It uses Pydantic v2.
+
+Author: Chinedu Ezeofor
+"""
 
 from datetime import date
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr, constr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 Status = Literal["pending", "processing", "shipped", "delivered"]
 
@@ -12,13 +16,19 @@ class BaseSchema(BaseModel):
     model_config = ConfigDict(str_to_lower=True, str_strip_whitespace=True)
 
 
-class CustomersSchema(BaseSchema):
+class CustomersSchema(BaseModel):
+    # Use BaseModel!
     name: str
+    username: str
     email: EmailStr
-    password: constr(min_length=8, max_length=24)  # type: ignore
     billing_address: Optional[str] = None
     shipping_address: str
     phone_number: Optional[str] = None
+
+
+class CustomersSchemaInDB(CustomersSchema):
+    # hashed_password
+    hashed_password: str
 
 
 class OrdersSchema(BaseSchema):

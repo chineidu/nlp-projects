@@ -1,3 +1,9 @@
+"""This module contains the API schema.
+It uses Pydantic v2.
+
+Author: Chinedu Ezeofor
+"""
+
 from pydantic import BaseModel
 
 

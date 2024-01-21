@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from e_commerce_app.models import get_db
@@ -18,7 +18,7 @@ def create_order(
 ) -> output_schema.OrdersOutputSchema:
     """This is used to create a new order."""
     _data = data.data[0]
-    result = crud.create_order(db=db, data=_data)
+    result: output_schema.OrdersOutputSchema = crud.create_order(db=db, data=_data)
 
     if result is None:
         raise HTTPException(
@@ -31,15 +31,17 @@ def create_order(
 
 @orders_router.get(path="/order/{customer_id}")
 def get_order(
-    customer_id: int, status: Status, db: db_dependency
+    customer_id: int, order_status: Status, db: db_dependency
 ) -> list[output_schema.OrdersOutputSchema]:
     """This is used to retrieve an available order.
 
     Usage: GET /order/customer_id?status=pending
     """
-    result = crud.get_orders_by_id_n_status(db=db, customer_id=customer_id, status=status)
+    result: output_schema.OrdersOutputSchema = crud.get_orders_by_id_n_status(
+        db=db, customer_id=customer_id, status=order_status
+    )
     if result is None:
-        raise HTTPException(status_code=404, detail="order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="order not found")
     return result
 
 
@@ -48,7 +50,7 @@ def get_orders(
     db: db_dependency,
 ) -> list[output_schema.OrdersOutputSchema]:
     """This is used to retrieve all available orders."""
-    result = crud.get_orders(db=db)
+    result: output_schema.OrdersOutputSchema = crud.get_orders(db=db)
     if result is None:
-        raise HTTPException(status_code=404, detail="order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="order not found")
     return result

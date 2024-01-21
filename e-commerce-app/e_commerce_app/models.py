@@ -34,6 +34,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)
 
 session_local = Session(bind=engine)
 Status = Literal["pending", "processing", "shipped", "delivered"]
+Default: str = "null"
 
 
 @typechecked
@@ -62,8 +63,9 @@ class Customers(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    username: Mapped[str] = mapped_column(String(255), default=Default, nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False)
-    password: Mapped[str] = mapped_column(String(50), nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     billing_address: Mapped[str] = mapped_column(String(255), nullable=True)
     shipping_address: Mapped[str] = mapped_column(String(255), nullable=False)
     phone_number: Mapped[str] = mapped_column(String(255), nullable=True)
@@ -72,8 +74,9 @@ class Customers(Base):
 
     def __repr__(self) -> str:
         return (
-            f"({self.__class__.__name__}(id={self.id!r}, name={self.name!r}, email={self.email!r}, "
-            f"shipping_address={self.shipping_address!r})"
+            f"({self.__class__.__name__}(id={self.id!r}, "
+            f"name={self.name!r}, username={self.username!r}, "
+            f"email={self.email!r}, shipping_address={self.shipping_address!r})"
         )
 
 

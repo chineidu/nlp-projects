@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from e_commerce_app.models import get_db
@@ -17,7 +17,7 @@ def create_product(
 ) -> output_schema.ProductsOutputSchema:
     """This is used to create a new product."""
     _data = data.data[0]
-    result = crud.create_product(db=db, data=_data)
+    result: output_schema.ProductsOutputSchema = crud.create_product(db=db, data=_data)
     return result
 
 
@@ -25,10 +25,10 @@ def create_product(
 def get_product(name: str, db: db_dependency) -> output_schema.ProductsOutputSchema:
     """This is used to retrieve an available product."""
     name = name.strip().lower()
-    product = crud.get_products_by_name(db=db, name=name)
-    if product is None:
-        raise HTTPException(status_code=404, detail="product not found")
-    return product
+    result: output_schema.ProductsOutputSchema = crud.get_products_by_name(db=db, name=name)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="product not found")
+    return result
 
 
 @products_router.get(path="/products/")
@@ -36,7 +36,7 @@ def get_products(
     db: db_dependency,
 ) -> list[output_schema.ProductsOutputSchema]:
     """This is used to retrieve all available products."""
-    result = crud.get_products(db=db)
+    result: output_schema.ProductsOutputSchema = crud.get_products(db=db)
     if result is None:
-        raise HTTPException(status_code=404, detail="product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="product not found")
     return result

@@ -1,33 +1,24 @@
-"""It uses Pydantic v2."""
+"""This module contains the schema for the outputs of the API.
 
-from datetime import datetime
+Author: Chinedu Ezeofor
+"""
+
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from e_commerce_app.v1.schemas.db_schema import (
+    CustomersSchema,
+    OrdersSchema,
+    ProductsSchema,
+)
 
-from e_commerce_app.v1.schemas.db_schema import Status
 
-
-class CustomersOutputSchema(BaseModel):
+class CustomersOutputSchema(CustomersSchema):
     id: Optional[int] = None
-    name: str
-    email: EmailStr
-    billing_address: Optional[str] = None
-    shipping_address: str
-    phone_number: Optional[str] = None
 
 
-class OrdersOutputSchema(BaseModel):
+class OrdersOutputSchema(OrdersSchema):
     id: Optional[int] = None
-    customer_id: int
-    order_date: datetime
-    total_price: float
-    status: Status
 
 
-class ProductsOutputSchema(BaseModel):
+class ProductsOutputSchema(ProductsSchema):
     id: Optional[int] = None
-    name: str
-    description: str
-    tags: Optional[str] = None
-    price: float

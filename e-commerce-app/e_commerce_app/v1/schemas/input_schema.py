@@ -1,4 +1,8 @@
-"""It uses Pydantic v2."""
+"""This module contains the schema for the inputs of the API.
+It uses Pydantic v2.
+
+Author: Chinedu Ezeofor
+"""
 
 from typing import Any, Literal
 
@@ -12,17 +16,18 @@ Status = Literal["pending", "processing", "shipped", "delivered"]
 class CustomersInputSchema(BaseModel):
     """Schema for customer input."""
 
-    data: list[db_schema.CustomersSchema]
+    data: list[db_schema.CustomersSchemaInDB]
 
     model_config: dict[str, Any] = {
         "json_schema_extra": {
             "example": {
                 "data": [
                     {
-                        "name": "Neidu",
-                        "email": "email@example.com",
-                        "password": "kjeth648353",
-                        "billing_address": "string",
+                        "name": "Adams Grey",
+                        "username": "adam123",
+                        "email": "adam123@email.com",
+                        "hashed_password": "12345abc",
+                        "billing_address": "null",
                         "shipping_address": "Mushin, Lagos.",
                         "phone_number": "4546-242-4351",
                     }

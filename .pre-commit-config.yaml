@@ -18,7 +18,7 @@ repos:
         entry: mypy
         language: python
         "types_or": [python, pyi]
-        exclude: ^tests/
+        exclude: ^(tests|e-commerce-app/alembic/)
         args:
           [
             "--ignore-missing-imports",
