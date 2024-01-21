@@ -13,7 +13,7 @@ services:
       - 8000:8000
     restart: always
     volumes:
-    # I added mounts individually to avoid messing with the .venv in the containier
+    # I added mounts individually to avoid messing with the .venv in the container
       - ./e_commerce_app:/opt/e_commerce_app
       - ./alembic:/opt/alembic
       - ./env:/opt/env
