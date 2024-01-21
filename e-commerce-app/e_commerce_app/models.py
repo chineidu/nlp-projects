@@ -112,5 +112,6 @@ class Orders(Base):
         )
 
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+## Create tables
+## Generate it with alembic
+# Base.metadata.create_all(bind=engine)

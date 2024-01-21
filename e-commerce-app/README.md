@@ -7,8 +7,15 @@
   - [Setup](#setup)
     - [Install Dependencies](#install-dependencies)
     - [Setup Environment Variables](#setup-environment-variables)
-    - [Create Database](#create-database)
+  - [Create Database \[Without Docker\]](#create-database-without-docker)
+    - [Database Migrations](#database-migrations)
+      - [Autogenerate The Tables (Using Alembic)](#autogenerate-the-tables-using-alembic)
+      - [Apply Latest Migrations](#apply-latest-migrations)
     - [Run App](#run-app)
+  - [Docker Setup](#docker-setup)
+    - [Start The Services](#start-the-services)
+    - [Setup PgAdmin](#setup-pgadmin)
+    - [Database Migrations \[Docker\]](#database-migrations-docker)
   - [Project Structure](#project-structure)
     - [Directories And Files](#directories-and-files)
     - [Database Schema](#database-schema)
@@ -38,10 +45,28 @@ poetry shell
 cp env/example.env env/.env
 ```
 
-### Create Database
+## Create Database [Without Docker]
 
 ```sh
 make create_db
+```
+
+### Database Migrations
+
+#### Autogenerate The Tables (Using Alembic)
+
+```sh
+alembic revision --autogenerate -m "New migration"
+```
+
+#### Apply Latest Migrations
+
+```sh
+# View the SQL commands
+alembic upgrade head --sql
+
+# Apply
+alembic upgrade head
 ```
 
 ### Run App
@@ -51,6 +76,38 @@ uvicorn app:app --port 8000 --host "0.0.0.0"
 
 ## Check listening ports
 # sudo lsof -i -P | grep LISTEN
+```
+
+## Docker Setup
+
+### Start The Services
+
+```sh
+docker-compose up
+```
+
+### Setup PgAdmin
+
+- Creds can be found at `e_commerce_app/env/example.env`
+
+- Go to http://localhost:5050/
+
+- Credentials
+  - email: `admin@admin.com`
+  - password: `admin`
+
+- Create a `server` and connect to the `database`
+
+### Database Migrations [Docker]
+
+- ssh into the `app` container.
+
+```sh
+# Autogenerate The Tables (Using Alembic)
+alembic revision --autogenerate -m "New migration"
+
+# Apply
+alembic upgrade head
 ```
 
 ## Project Structure
