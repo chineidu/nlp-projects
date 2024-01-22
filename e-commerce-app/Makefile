@@ -1,4 +1,4 @@
-.PHONY: help setup_venv run_test create_db
+.PHONY: help setup_venv run_test create_db drop_db
 
 
 help:
@@ -6,6 +6,7 @@ help:
 	@echo "\tsetup_venv:          create a virtual environment (REQUIRED)."
 	@echo "\trun_test:            run the tests."
 	@echo "\tcreate_db:           create the database."
+	@echo "\tdrop_db:             drop the database."
 	@echo
 
 setup_venv:
@@ -27,4 +28,12 @@ create_db:
 __create_db__:
 	@echo
 	@echo ">>>> Creating the DB. <<<<"
-	python e_commerce_app/database.py
+	python e_commerce_app/database.py --command 'create_db' database-manager
+
+drop_db:
+	poetry run ${MAKE} __drop_db__
+
+__drop_db__:
+	@echo
+	@echo ">>>> Dropping the DB. <<<<"
+	python e_commerce_app/database.py --command 'drop_db' database-manager
