@@ -5,6 +5,8 @@ Author: Chinedu Ezeofor
 
 from typing import Optional
 
+from pydantic import BaseModel, ConfigDict
+
 from e_commerce_app.v1.schemas.db_schema import (
     CustomersSchema,
     OrdersSchema,
@@ -22,3 +24,11 @@ class OrdersOutputSchema(OrdersSchema):
 
 class ProductsOutputSchema(ProductsSchema):
     id: Optional[int] = None
+
+
+class HealthCheckSchema(BaseModel):
+    model_config = ConfigDict(str_to_lower=True, str_strip_whitespace=True)
+
+    message: str
+    version: str
+    status: str

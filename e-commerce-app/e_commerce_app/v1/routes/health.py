@@ -1,9 +1,16 @@
+"""This module contains the health check endpoints of the API.
+
+Author: Chinedu Ezeofor
+"""
+
 from typing import Any
 
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
+from typeguard import typechecked
 
 from e_commerce_app.config import settings
+from e_commerce_app.v1.schemas.output_schema import HealthCheckSchema
 
 root_router = APIRouter()
 
@@ -20,6 +27,7 @@ body_template: str = """
     """
 
 
+@typechecked
 @root_router.get("/")
 async def index() -> Any:
     """This is the homepage."""
@@ -28,8 +36,9 @@ async def index() -> Any:
     return HTMLResponse(content=body)
 
 
+@typechecked
 @root_router.get(f"/health")
-async def health() -> dict[str, Any]:
+async def health() -> HealthCheckSchema:
     """This is used for health check."""
 
     return {

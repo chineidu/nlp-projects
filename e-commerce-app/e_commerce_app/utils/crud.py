@@ -3,7 +3,6 @@
 from typing import Any, Optional, Union
 
 from passlib.context import CryptContext
-from rich.console import Console
 from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 from typeguard import typechecked
@@ -11,7 +10,7 @@ from typeguard import typechecked
 from e_commerce_app import models
 from e_commerce_app.v1.schemas import db_schema
 
-console = Console()
+# Password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
