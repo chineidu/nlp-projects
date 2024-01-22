@@ -24,11 +24,11 @@ class CustomersInputSchema(BaseModel):
                 "data": [
                     {
                         "name": "Adams Grey",
-                        "username": "adam123",
+                        "username": "adam",
                         "email": "adam123@email.com",
-                        "hashed_password": "12345abc",
+                        "hashed_password": "password",
                         "billing_address": "null",
-                        "shipping_address": "Mushin, Lagos.",
+                        "shipping_address": "Surulere, Lagos.",
                         "phone_number": "4546-242-4351",
                     }
                 ]

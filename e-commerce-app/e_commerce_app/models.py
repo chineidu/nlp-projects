@@ -1,3 +1,8 @@
+"""This module is used for creating SQL models for the database.
+
+Author: Chinedu Ezeofor
+"""
+
 from datetime import datetime
 from typing import Any, Literal
 

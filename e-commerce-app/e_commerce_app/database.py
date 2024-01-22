@@ -1,3 +1,8 @@
+"""This module is used for managing the database.
+
+Author: Chinedu Ezeofor
+"""
+
 from typing import Any, Literal
 
 import click

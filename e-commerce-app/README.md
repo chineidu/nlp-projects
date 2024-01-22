@@ -7,7 +7,7 @@
   - [Setup](#setup)
     - [Install Dependencies](#install-dependencies)
     - [Setup Environment Variables](#setup-environment-variables)
-  - [Create Database \[Without Docker\]](#create-database-without-docker)
+  - [Manage Database \[Without Docker\]](#manage-database-without-docker)
     - [Database Migrations](#database-migrations)
       - [Autogenerate The Tables (Using Alembic)](#autogenerate-the-tables-using-alembic)
       - [Apply Latest Migrations](#apply-latest-migrations)
@@ -45,9 +45,13 @@ poetry shell
 cp env/example.env env/.env
 ```
 
-## Create Database [Without Docker]
+## Manage Database [Without Docker]
 
 ```sh
+# Drop the database if it exists
+make drop_db
+
+# Create a new database
 make create_db
 ```
 
